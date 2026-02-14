@@ -24,7 +24,7 @@ fn main() {
     println!("########################################## WELCOME TO JANKY HANGMAN ###################################################");
     
     let accepted: &str = "abcdefgijklmnopqrstuvwxyz";
-
+    apply_found(true, word.chars().nth(0).unwrap(), word.clone(), found.as_mut_slice());
     let getter = Getch::new();
     loop {
         println!("#######################################################################################################################\n");
@@ -41,7 +41,7 @@ fn main() {
                 println!("YOU ENTERED: {}",char);
                 if (accepted.contains(char)) {
                     if (check_letter(char, word.clone())) {  //letter exists in the word
-                        apply_found(char, word.clone(), found.as_mut_slice());
+                        apply_found(false, char, word.clone(), found.as_mut_slice());
                         let mut false_exists = false;
                         for spot in found.as_slice() { //checking if all the letters are found
                             if (!spot) {
@@ -116,20 +116,25 @@ fn check_letter(char: char, word: String) -> bool {
     return false;
 }
 
-fn apply_found(char: char, word: String, vec: &mut [bool]) {
+fn apply_found(silent: bool, char: char, word: String, vec: &mut [bool]) {
     for (i, letter) in word.chars().enumerate() {
         if (letter as char == char) {
             if (vec[i] == true) {
                 println!("You have already entered the character \"{}\"", letter);
                 return;
             } else {
-                println!("You found a new character! \"{}\"", letter);
+                if(silent != true ) 
+                {
+                    println!("You found a new character! \"{}\"", letter);
+                }
                 vec[i] = true;
             }
         }
     }
     return;
 }
+
+
 
 fn print_found(word: String, vec: &mut [bool]) {
     for (i, letter) in word.chars().enumerate() {
